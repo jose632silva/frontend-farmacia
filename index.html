@@ -1195,7 +1195,8 @@ init();
     .shell {
       display: flex;
       height: 100dvh;
-      max-width: 100%;
+      max-width: 100%;        /* ← ALTERADO: era 780px */
+      width: 100%;
       margin: 0 auto;
       flex-direction: column;
       position: relative;
@@ -1207,7 +1208,7 @@ init();
       content: '';
       position: fixed;
       inset: 0;
-      max-width: 100%;
+      max-width: 100%;        /* ← ALTERADO: era 780px */
       margin: 0 auto;
       background-image:
         linear-gradient(rgba(0,200,180,0.025) 1px, transparent 1px),
@@ -1474,8 +1475,24 @@ init();
     .msg.user { align-items: flex-end; }
     .msg.bot  { align-items: flex-start; }
 
-    .msg-row { display: flex; align-items: flex-end; gap: 10px; max-width: 88%; }
+    /* ← ALTERADO: era max-width 88% — agora ocupa toda a largura disponível */
+    .msg-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      max-width: 100%;
+      width: 100%;
+    }
     .msg.user .msg-row { flex-direction: row-reverse; }
+
+    /* Bolhas do usuário mantêm tamanho natural; bot expande */
+    .msg.user .bubble {
+      max-width: 72%;          /* ← mantém bubble do usuário razoável */
+    }
+    .msg.bot .bubble {
+      flex: 1;                 /* ← bolha do bot ocupa todo o espaço disponível */
+      max-width: calc(100% - 44px); /* desconta avatar + gap */
+    }
 
     .avatar {
       width: 34px; height: 34px;
@@ -1497,7 +1514,6 @@ init();
       line-height: 1.65;
       word-break: break-word;
       white-space: pre-wrap;
-      max-width: 100%;
     }
     .msg.user .bubble {
       background: linear-gradient(135deg, var(--accent2), var(--accent));
@@ -2283,4 +2299,3 @@ init();
 </script>
 </body>
 </html>
-
