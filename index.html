@@ -1,1 +1,1139 @@
-"<!DOCTYPE html><html><head><title>Frontend Farm�cia</title></head><body><h1>Ol�</h1></body></html>" 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
+  <title>FarmaVida — Atendente Virtual</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:          #06101A;
+      --bg2:         #0B1928;
+      --card:        #0F2236;
+      --card2:       #162D45;
+      --card3:       #1C3553;
+      --border:      rgba(0,200,180,0.12);
+      --border2:     rgba(0,200,180,0.22);
+      --accent:      #00C8B4;
+      --accent2:     #00A89A;
+      --accent-glow: rgba(0,200,180,0.18);
+      --blue:        #4895EF;
+      --blue-soft:   rgba(72,149,239,0.12);
+      --green:       #2ECC71;
+      --green-soft:  rgba(46,204,113,0.12);
+      --amber:       #F7B731;
+      --text:        #EDF2F7;
+      --text2:       #A0B4C8;
+      --muted:       #4A6580;
+      --muted2:      #1C3553;
+      --font-title:  'Cormorant Garamond', serif;
+      --font-body:   'DM Sans', sans-serif;
+      --radius:      16px;
+      --radius-sm:   10px;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* ── SHELL LAYOUT ── */
+    .shell {
+      display: flex;
+      height: 100dvh;
+      max-width: 780px;
+      margin: 0 auto;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle background grid texture */
+    .shell::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      max-width: 780px;
+      margin: 0 auto;
+      background-image:
+        linear-gradient(rgba(0,200,180,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,200,180,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      flex-shrink: 0;
+      background: linear-gradient(180deg, var(--bg2) 0%, transparent 100%);
+      padding: 10px 28px 8px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: linear-gradient(145deg, var(--card3), var(--card2));
+      border: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 8px 32px rgba(0,200,180,0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .brand-icon svg { filter: drop-shadow(0 0 8px rgba(0,200,180,0.6)); }
+
+    .brand-text { line-height: 1; }
+    .brand-name {
+      font-family: var(--font-title);
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.3px;
+    }
+    .brand-name span { color: var(--accent); }
+    .brand-sub {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-right { display: flex; align-items: center; gap: 10px; }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green-soft);
+      border: 1px solid rgba(46,204,113,0.25);
+      border-radius: 24px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+    }
+    .sdot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 2.5s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:.25;} }
+    /* ── QUICK ACTIONS ── */
+
+    .quick-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      flex-shrink: 0;
+      padding: 4px 0 6px;
+      cursor: grab;
+      position: relative;
+    }
+    .quick-scroll::-webkit-scrollbar { display: none; }
+    .quick-scroll.dragging { cursor: grabbing; }
+
+    .quick-track {
+      display: flex;
+      gap: 6px;
+      width: max-content;
+      padding: 0 28px;
+    }
+
+    .qchip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 5px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      flex-shrink: 0;
+    }
+    .qchip:hover, .qchip:active {
+      background: var(--card3);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 4px 20px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .qchip-icon { font-size: 12px; }
+    .qchip-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text2);
+    }
+    .qchip:hover .qchip-text { color: var(--text); }
+
+    /* ── CAROUSEL (products) ── */
+    .carousel-wrap {
+      flex-shrink: 0;
+      margin-bottom: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .carousel-wrap::before,
+    .carousel-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 16px;
+      width: 48px; z-index: 3;
+      pointer-events: none;
+    }
+    .carousel-wrap::before { left:0; background: linear-gradient(to right, var(--bg), transparent); }
+    .carousel-wrap::after  { right:0; background: linear-gradient(to left, var(--bg), transparent); }
+
+    .prod-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 2px 0 4px;
+      cursor: grab;
+    }
+    .prod-scroll::-webkit-scrollbar { display: none; }
+    .prod-scroll.dragging { cursor: grabbing; }
+
+    .prod-track { display: flex; gap: 7px; width: max-content; padding: 0 28px; }
+
+    .pcard {
+      width: 75px;
+      flex-shrink: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 7px 6px 7px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color .2s, box-shadow .2s, transform .15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+    }
+    .pcard::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,200,180,0.3), transparent);
+    }
+    .pcard:active { transform: scale(.93); }
+    .pcard:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 8px 28px rgba(0,0,0,.5);
+    }
+
+    .pcard-img {
+      width: 45px; height: 45px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--card2);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .pcard-emoji {
+      width: 45px; height: 45px;
+      border-radius: 8px;
+      background: var(--card2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 3px;
+    }
+    .pcard-name {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.25;
+    }
+    .pcard-cat {
+      font-size: 8px;
+      font-weight: 500;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .pcard.flash {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent), 0 0 40px var(--accent-glow);
+    }
+
+    /* ── DIVIDER ── */
+    .sep {
+      flex-shrink: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2) 30%, var(--border2) 70%, transparent);
+      margin: 0;
+    }
+
+    /* ── CHAT ── */
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 28px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card3) transparent;
+      position: relative;
+      z-index: 1;
+    }
+    .chat::-webkit-scrollbar { width: 3px; }
+    .chat::-webkit-scrollbar-thumb { background: var(--card3); border-radius: 2px; }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      animation: msgIn .28s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes msgIn { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+    .msg.user { align-items: flex-end; }
+    .msg.bot  { align-items: flex-start; }
+
+    .msg-row { display: flex; align-items: flex-end; gap: 10px; max-width: 88%; }
+    .msg.user .msg-row { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar.bot-av {
+      background: linear-gradient(145deg, var(--card3), var(--card2));
+      border: 1px solid var(--border2);
+    }
+    .avatar.user-av {
+      background: linear-gradient(145deg, var(--accent2), var(--accent));
+    }
+
+    .bubble {
+      padding: 12px 18px;
+      font-size: 14.5px;
+      line-height: 1.65;
+      word-break: break-word;
+      white-space: pre-wrap;
+      max-width: 100%;
+    }
+    .msg.user .bubble {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      font-weight: 500;
+      border-radius: 20px 20px 4px 20px;
+      box-shadow: 0 4px 20px rgba(0,200,180,0.2);
+    }
+    .msg.bot .bubble {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 4px 20px 20px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .msg.bot .bubble strong { color: var(--accent); }
+    .msg.bot .bubble em { color: var(--text2); font-style: normal; }
+
+    /* Source tag */
+    .source-tag {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding-left: 44px;
+    }
+    .source-tag svg { opacity: 0.5; }
+
+    /* Typing */
+    .typing {
+      display: none;
+      align-items: center;
+      gap: 5px;
+      padding: 14px 18px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px 20px 20px 20px;
+      width: fit-content;
+    }
+    .typing.on { display: flex; }
+    .tdot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: td 1.3s infinite ease-in-out;
+      opacity: 0.5;
+    }
+    .tdot:nth-child(2) { animation-delay: .18s; }
+    .tdot:nth-child(3) { animation-delay: .36s; }
+    @keyframes td { 0%,80%,100%{transform:translateY(0);opacity:.3;} 40%{transform:translateY(-6px);opacity:1;} }
+
+    /* ── INPUT BAR ── */
+    .bar {
+      flex-shrink: 0;
+      padding: 4px 28px 14px;
+      background: linear-gradient(0deg, var(--bg) 60%, transparent);
+      position: relative;
+      z-index: 10;
+    }
+
+    .bar-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      flex-wrap: wrap;
+    }
+    .suggest-btn {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .suggest-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .bar-inner {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      background: var(--card);
+      border: 1.5px solid var(--border2);
+      border-radius: 24px;
+      padding: 7px 8px 7px 16px;
+      transition: border-color .2s, box-shadow .2s;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+    .bar-inner:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow), 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    textarea.ti {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      resize: none;
+      max-height: 110px;
+      min-height: 18px;
+      padding: 3px 0;
+    }
+    textarea.ti::placeholder { color: var(--muted); }
+
+    .ibtn {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: all .18s;
+    }
+    .ibtn:active { transform: scale(.87); }
+    .ibtn:disabled { opacity: .3; cursor: not-allowed; }
+
+    .mic-btn { background: var(--card2); color: var(--text2); }
+    .mic-btn:hover { background: var(--accent-glow); color: var(--accent); }
+    .mic-btn.rec { background: #c0392b; color: #fff; animation: mpulse 1s infinite; }
+    @keyframes mpulse { 0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.5);} 50%{box-shadow:0 0 0 8px rgba(192,57,43,0);} }
+
+    .send-btn { background: var(--accent); color: #fff; }
+    .send-btn:hover { background: var(--accent2); box-shadow: 0 4px 20px rgba(0,200,180,0.4); }
+
+    /* Disclaimer */
+    .bar-disclaimer {
+      text-align: center;
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 9px;
+      line-height: 1.4;
+    }
+    .bar-disclaimer span { color: var(--text2); }
+
+    /* ── MIC OVERLAY ── */
+    .mic-ov {
+      display: none;
+      position: fixed; inset: 0; z-index: 60;
+      background: rgba(6,16,26,0.92);
+      backdrop-filter: blur(20px);
+      flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 20px;
+    }
+    .mic-ov.on { display: flex; }
+    .mic-ring {
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      background: #c0392b;
+      display: flex; align-items: center; justify-content: center;
+      animation: mpulse 1s infinite;
+    }
+    .mic-label {
+      font-family: var(--font-title);
+      font-size: 22px; font-weight: 700;
+    }
+    .mic-sub { font-size: 14px; color: var(--text2); }
+    .mic-cancel {
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text); font-family: var(--font-body);
+      font-size: 14px; padding: 12px 30px; border-radius: 28px;
+      cursor: pointer; margin-top: 8px; transition: border-color .15s;
+    }
+    .mic-cancel:hover { border-color: var(--accent); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 100px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: var(--card);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 13px; font-weight: 500;
+      padding: 9px 20px; border-radius: 28px;
+      opacity: 0; pointer-events: none;
+      transition: all .3s; z-index: 80;
+      white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,.4);
+    }
+    .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── WELCOME CARD ── */
+    .welcome-card {
+      background: linear-gradient(135deg, var(--card) 0%, var(--card2) 100%);
+      border: 1px solid var(--border2);
+      border-radius: 18px;
+      padding: 20px;
+      animation: msgIn .4s cubic-bezier(.16,1,.3,1) both;
+    }
+    .wc-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+    }
+    .wc-icon {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--accent-glow);
+      border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .wc-title {
+      font-family: var(--font-title);
+      font-size: 18px; font-weight: 600; color: var(--text);
+    }
+    .wc-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .wc-text {
+      font-size: 14px; color: var(--text2);
+      line-height: 1.65; margin-bottom: 14px;
+    }
+    .wc-text strong { color: var(--accent); }
+    .wc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wc-chip {
+      background: var(--card3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12.5px; font-weight: 500;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .wc-chip:hover {
+      border-color: var(--accent); color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    @supports (padding: env(safe-area-inset-bottom)) {
+      .bar { padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Mic Overlay -->
+<div class="mic-ov" id="micOv">
+  <div class="mic-ring">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+    </svg>
+  </div>
+  <div class="mic-label">Ouvindo…</div>
+  <div class="mic-sub">Fale sua dúvida agora</div>
+  <button class="mic-cancel" onclick="stopRec()">Cancelar</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="shell">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-top">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 28 28" fill="none">
+            <rect x="11" y="3" width="6" height="22" rx="3" fill="#00C8B4"/>
+            <rect x="3" y="11" width="22" height="6" rx="3" fill="#00C8B4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-name">Farma<span>Vida</span></div>
+          <div class="brand-sub">Atendente Virtual — IA</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="hero-badge">RAG IA</div>
+        <div class="status-pill"><span class="sdot"></span>Online 24h</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- QUICK ACTIONS -->
+  <div class="quick-scroll" id="quickScroll">
+    <div class="quick-track" id="quickTrack"></div>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="carousel-wrap">
+    <div class="prod-scroll" id="prodScroll">
+      <div class="prod-track" id="prodTrack"></div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+
+  <!-- CHAT -->
+  <main class="chat" id="chat">
+    <div class="typing" id="typing">
+      <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+    </div>
+  </main>
+
+  <!-- INPUT BAR -->
+  <footer class="bar">
+    <div class="bar-top" id="suggestBar"></div>
+    <div class="bar-inner">
+      <textarea class="ti" id="ti" placeholder="Pergunte sobre medicamentos, disponibilidade, dosagem…" rows="1"></textarea>
+      <button class="ibtn mic-btn" id="micBtn" onclick="toggleRec()" title="Falar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+          <line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <button class="ibtn send-btn" id="sendBtn" onclick="doSend()" title="Enviar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="bar-disclaimer">
+      Informações de apoio — não substituem orientação médica.
+      <span>Consulte sempre um profissional de saúde.</span>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   CONFIGURAÇÃO — Edite conforme necessário
+══════════════════════════════════════════════ */
+const API_URL = 'https://agente-farmacia.onrender.com/agui';
+
+const QUICK_ACTIONS = [
+  { icon:'💊', text:'Posso tomar sem receita?',   msg:'Quais medicamentos posso comprar sem receita médica?' },
+  { icon:'📋', text:'Verificar disponibilidade',  msg:'Vocês têm disponibilidade do medicamento que preciso?' },
+  { icon:'⚠️', text:'Interações medicamentosas',  msg:'Quero saber sobre interações entre medicamentos' },
+  { icon:'🩺', text:'Pressão alta',                msg:'Quais medicamentos vocês têm para pressão alta?' },
+  { icon:'🤧', text:'Gripe e resfriado',           msg:'Quais produtos vocês têm para gripe e resfriado?' },
+  { icon:'😴', text:'Dificuldade para dormir',     msg:'Vocês têm algo para ajudar a dormir sem receita?' },
+  { icon:'🤒', text:'Febre e dor',                 msg:'Quais analgésicos e antitérmicos vocês têm?' },
+  { icon:'💆', text:'Vitaminas e suplementos',    msg:'Quais vitaminas e suplementos vocês oferecem?' },
+];
+
+const PRODUCTS = [
+  { emoji:'💊', name:'Dipirona 500mg',     cat:'Analgésico',     msg:'Vocês têm Dipirona 500mg?' },
+  { emoji:'🩹', name:'Ibuprofeno 600mg',   cat:'Anti-inflamatório', msg:'Vocês têm Ibuprofeno 600mg?' },
+  { emoji:'🧴', name:'Omeprazol 20mg',     cat:'Estômago',       msg:'Vocês têm Omeprazol 20mg?' },
+  { emoji:'💉', name:'Losartana 50mg',     cat:'Hipertensão',    msg:'Vocês têm Losartana 50mg?' },
+  { emoji:'🌿', name:'Vitamina C 1g',      cat:'Suplemento',     msg:'Vocês têm Vitamina C 1g efervescente?' },
+  { emoji:'🫁', name:'Azitromicina',       cat:'Antibiótico',    msg:'Vocês têm Azitromicina 500mg?' },
+  { emoji:'🧬', name:'Metformina 850mg',   cat:'Diabetes',       msg:'Vocês têm Metformina 850mg?' },
+  { emoji:'❤️', name:'Ômega 3',            cat:'Cardiovascular', msg:'Vocês têm suplemento de Ômega 3?' },
+];
+
+const SUGGESTIONS = [
+  '📦 Ver estoque', '💰 Preço de genérico', '🔄 Qual a dosagem?', '📍 Retirar na loja'
+];
+
+/* ══════════════════════════════════════════════
+   ESTADO
+══════════════════════════════════════════════ */
+let busy = false, recog = null, recording = false;
+let scrollPaused = false, prodScroll;
+
+let tid = localStorage.getItem('fv_tid');
+if (!tid) { tid = 'fv-' + Date.now(); localStorage.setItem('fv_tid', tid); }
+
+let hist = [];
+try { hist = JSON.parse(localStorage.getItem('fv_hist') || '[]'); } catch {}
+
+const chatEl   = document.getElementById('chat');
+const tiEl     = document.getElementById('ti');
+const sendBtn  = document.getElementById('sendBtn');
+const micBtn   = document.getElementById('micBtn');
+const typEl    = document.getElementById('typing');
+const micOv    = document.getElementById('micOv');
+const toastEl  = document.getElementById('toast');
+
+/* ══════════════════════════════════════════════
+   QUICK CHIPS
+══════════════════════════════════════════════ */
+function buildQuickActions() {
+  const track = document.getElementById('quickTrack');
+  const outer = document.getElementById('quickScroll');
+
+  QUICK_ACTIONS.forEach(a => {
+    const chip = document.createElement('div');
+    chip.className = 'qchip';
+    chip.innerHTML = `<span class="qchip-icon">${a.icon}</span><span class="qchip-text">${a.text}</span>`;
+    chip.addEventListener('click', () => { if (!busy) sendText(a.msg); });
+    track.appendChild(chip);
+  });
+
+  // Drag scroll
+  let isDown = false, startX = 0, startScroll = 0;
+  outer.addEventListener('mousedown', e => {
+    isDown = true; startX = e.pageX; startScroll = outer.scrollLeft;
+    outer.classList.add('dragging'); e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    outer.scrollLeft = startScroll + (startX - e.pageX);
+  });
+  window.addEventListener('mouseup', () => { isDown = false; outer.classList.remove('dragging'); });
+}
+
+/* ══════════════════════════════════════════════
+   CAROUSEL PRODUTOS (scroll automático infinito)
+══════════════════════════════════════════════ */
+const SCROLL_SPEED = 0.45;
+let rafId;
+
+function buildCarousel() {
+  const track = document.getElementById('prodTrack');
+  prodScroll  = document.getElementById('prodScroll');
+
+  // Duplica para loop infinito
+  [...PRODUCTS, ...PRODUCTS].forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'pcard';
+
+    const emDiv = document.createElement('div');
+    emDiv.className = 'pcard-emoji';
+    emDiv.textContent = p.emoji;
+
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'pcard-name';
+    nameDiv.textContent = p.name;
+
+    const catDiv = document.createElement('div');
+    catDiv.className = 'pcard-cat';
+    catDiv.textContent = p.cat;
+
+    card.appendChild(emDiv);
+    card.appendChild(nameDiv);
+    card.appendChild(catDiv);
+
+    card.addEventListener('click', () => {
+      if (busy) return;
+      card.classList.add('flash');
+      setTimeout(() => card.classList.remove('flash'), 600);
+      sendText(p.msg);
+    });
+
+    track.appendChild(card);
+  });
+
+  requestAnimationFrame(() => {
+    startAutoScroll();
+    setupProdDrag();
+  });
+}
+
+function startAutoScroll() {
+  function step() {
+    if (!scrollPaused && prodScroll) {
+      prodScroll.scrollLeft += SCROLL_SPEED;
+      const half = prodScroll.scrollWidth / 2;
+      if (prodScroll.scrollLeft >= half) prodScroll.scrollLeft -= half;
+    }
+    rafId = requestAnimationFrame(step);
+  }
+  rafId = requestAnimationFrame(step);
+}
+
+function setupProdDrag() {
+  let isDown = false, startX = 0, startScroll = 0;
+  prodScroll.addEventListener('touchstart', e => {
+    scrollPaused = true; startX = e.touches[0].pageX; startScroll = prodScroll.scrollLeft;
+  }, { passive: true });
+  prodScroll.addEventListener('touchmove', e => {
+    const dx = startX - e.touches[0].pageX;
+    prodScroll.scrollLeft = startScroll + dx;
+    const half = prodScroll.scrollWidth / 2;
+    if (prodScroll.scrollLeft < 0) prodScroll.scrollLeft += half;
+    if (prodScroll.scrollLeft >= half) prodScroll.scrollLeft -= half;
+  }, { passive: true });
+  prodScroll.addEventListener('touchend', () => { scrollPaused = false; });
+
+  prodScroll.addEventListener('mousedown', e => {
+    isDown = true; scrollPaused = true;
+    startX = e.pageX; startScroll = prodScroll.scrollLeft;
+    prodScroll.classList.add('dragging'); e.preventDefault();
+  });
+  window.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    const dx = startX - e.pageX;
+    prodScroll.scrollLeft = startScroll + dx;
+    const half = prodScroll.scrollWidth / 2;
+    if (prodScroll.scrollLeft < 0) prodScroll.scrollLeft += half;
+    if (prodScroll.scrollLeft >= half) prodScroll.scrollLeft -= half;
+  });
+  window.addEventListener('mouseup', () => {
+    if (!isDown) return;
+    isDown = false; scrollPaused = false;
+    prodScroll.classList.remove('dragging');
+  });
+}
+
+/* ══════════════════════════════════════════════
+   SUGGESTION CHIPS (acima do input)
+══════════════════════════════════════════════ */
+function buildSuggestBar() {
+  const bar = document.getElementById('suggestBar');
+  SUGGESTIONS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'suggest-btn';
+    btn.textContent = s;
+    btn.addEventListener('click', () => { if (!busy) { tiEl.value = s.replace(/^[^\s]+ /,''); doSend(); } });
+    bar.appendChild(btn);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   ENVIO E COMUNICAÇÃO COM O AGENTE
+══════════════════════════════════════════════ */
+function doSend() {
+  const t = tiEl.value.trim();
+  if (!t || busy) return;
+  tiEl.value = '';
+  tiEl.style.height = 'auto';
+  sendText(t);
+}
+
+async function sendText(text) {
+  if (!text || busy) return;
+  setBusy(true);
+  addUser(text);
+  saveH('user', text);
+  showTyp(true);
+
+  const body = {
+    threadId: tid,
+    runId: 'run-' + Date.now(),
+    messages: [{
+      id: (crypto.randomUUID ? crypto.randomUUID() : Date.now() + ''),
+      role: 'user',
+      content: text
+    }],
+    state: {},
+    tools: [],
+    context: [],
+    forwardedProps: {}
+  };
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const eb = await res.text().catch(() => '');
+      throw new Error('HTTP ' + res.status + (eb ? ' — ' + eb.slice(0, 120) : ''));
+    }
+
+    const raw = await res.text();
+    let reply = '', node = null;
+
+    for (const line of raw.split('\n')) {
+      if (!line.startsWith('data: ')) continue;
+      const j = line.substring(6).trim();
+      if (!j) continue;
+      try {
+        const ev = JSON.parse(j);
+        if (ev.type === 'TEXT_MESSAGE_CONTENT' && ev.delta) {
+          reply += ev.delta;
+          showTyp(false);
+          if (!node) node = addBot(reply);
+          else updBot(node, reply);
+        }
+      } catch (pe) { console.warn('SSE parse:', pe); }
+    }
+
+    if (reply) saveH('assistant', reply);
+    else { showTyp(false); addBot('Desculpe, não consegui processar sua pergunta. Pode repetir?'); }
+
+  } catch (e) {
+    showTyp(false);
+    addBot('❌ ' + (e.message || 'Erro de conexão') + '\n\nVerifique se o servidor está ativo ou tente novamente.');
+    console.error('[sendText]', e);
+  } finally {
+    setBusy(false);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RENDERIZAÇÃO DO CHAT
+══════════════════════════════════════════════ */
+function fmt(t) {
+  return t
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+function esc(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function addUser(text) {
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  row.innerHTML = `
+    <div class="bubble">${esc(text)}</div>
+    <div class="avatar user-av">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    </div>`;
+  const d = document.createElement('div');
+  d.className = 'msg user';
+  d.appendChild(row);
+  chatEl.insertBefore(d, typEl);
+  scroll();
+  return d;
+}
+
+function addBot(text) {
+  const row = document.createElement('div');
+  row.className = 'msg-row';
+  row.innerHTML = `
+    <div class="avatar bot-av">
+      <svg width="15" height="15" viewBox="0 0 28 28" fill="none">
+        <rect x="11" y="3" width="6" height="22" rx="3" fill="#00C8B4"/>
+        <rect x="3" y="11" width="22" height="6" rx="3" fill="#00C8B4"/>
+      </svg>
+    </div>
+    <div class="bubble">${fmt(text)}</div>`;
+  const d = document.createElement('div');
+  d.className = 'msg bot';
+  d.appendChild(row);
+  chatEl.insertBefore(d, typEl);
+  scroll();
+  return d;
+}
+
+function updBot(n, t) {
+  n.querySelector('.bubble').innerHTML = fmt(t);
+  scroll();
+}
+
+function scroll() { requestAnimationFrame(() => { chatEl.scrollTop = chatEl.scrollHeight; }); }
+function showTyp(v) { typEl.classList.toggle('on', v); if (v) scroll(); }
+function setBusy(v) { busy = v; sendBtn.disabled = v; tiEl.disabled = v; if (!v) tiEl.focus(); }
+
+/* ══════════════════════════════════════════════
+   HISTÓRICO LOCAL
+══════════════════════════════════════════════ */
+function saveH(role, content) {
+  hist.push({ role, content });
+  if (hist.length > 120) hist = hist.slice(-120);
+  try { localStorage.setItem('fv_hist', JSON.stringify(hist)); } catch {}
+}
+
+/* ══════════════════════════════════════════════
+   VOZ
+══════════════════════════════════════════════ */
+function toggleRec() { recording ? stopRec() : startRec(); }
+
+function startRec() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { showToast('Microfone não suportado neste navegador'); return; }
+  recog = new SR();
+  recog.lang = 'pt-BR';
+  recog.interimResults = false;
+  recog.maxAlternatives = 1;
+  recog.onstart  = () => { recording = true; micBtn.classList.add('rec'); micOv.classList.add('on'); };
+  recog.onresult = e => {
+    const t = e.results[0][0].transcript;
+    stopRec();
+    tiEl.value = t;
+    tiEl.style.height = 'auto';
+    tiEl.style.height = Math.min(tiEl.scrollHeight, 110) + 'px';
+    doSend();
+  };
+  recog.onerror = e => { stopRec(); if (e.error !== 'aborted') showToast('Não foi possível capturar o áudio'); };
+  recog.onend   = () => stopRec();
+  recog.start();
+}
+
+function stopRec() {
+  recording = false;
+  micBtn.classList.remove('rec');
+  micOv.classList.remove('on');
+  if (recog) { try { recog.abort(); } catch {} recog = null; }
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+let toastTimer;
+function showToast(m) {
+  toastEl.textContent = m;
+  toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('on'), 3200);
+}
+
+/* ══════════════════════════════════════════════
+   KEEP ALIVE — Evita cold start no Render
+══════════════════════════════════════════════ */
+function keepAlive() {
+  setInterval(() => {
+    fetch('https://agente-farmacia.onrender.com', {
+      method: 'HEAD',
+      cache: 'no-store',
+      mode: 'no-cors'
+    }).catch(() => {});
+  }, 300000); // a cada 5 minutos
+}
+
+/* ══════════════════════════════════════════════
+   WELCOME CARD
+══════════════════════════════════════════════ */
+function addWelcomeCard() {
+  const d = document.createElement('div');
+  d.className = 'welcome-card';
+  d.innerHTML = `
+    <div class="wc-header">
+      <div class="wc-icon">💊</div>
+      <div>
+        <div class="wc-title">Olá! Sou o assistente da FarmaVida</div>
+        <div class="wc-sub">Inteligência Artificial com base de dados atualizada</div>
+      </div>
+    </div>
+    <div class="wc-text">
+      Posso te ajudar a verificar <strong>disponibilidade de medicamentos</strong>,
+      informar sobre <strong>dosagens e indicações</strong>, esclarecer
+      <strong>interações medicamentosas</strong> e muito mais.<br><br>
+      O que você gostaria de saber?
+    </div>
+    <div class="wc-chips">
+      <div class="wc-chip" onclick="sendText('Preciso de um analgésico sem receita')">💊 Analgésico sem receita</div>
+      <div class="wc-chip" onclick="sendText('Quero saber sobre antibióticos disponíveis')">🧫 Antibióticos</div>
+      <div class="wc-chip" onclick="sendText('Quais vitaminas vocês têm?')">🌿 Vitaminas</div>
+      <div class="wc-chip" onclick="sendText('Posso misturar esses dois medicamentos?')">⚠️ Interações</div>
+    </div>`;
+  chatEl.insertBefore(d, typEl);
+  scroll();
+}
+
+/* ══════════════════════════════════════════════
+   INICIALIZAÇÃO
+══════════════════════════════════════════════ */
+function init() {
+  buildQuickActions();
+  buildCarousel();
+  buildSuggestBar();
+
+  tiEl.addEventListener('input', () => {
+    tiEl.style.height = 'auto';
+    tiEl.style.height = Math.min(tiEl.scrollHeight, 110) + 'px';
+  });
+  tiEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doSend(); }
+  });
+
+  if (hist.length === 0) {
+    addWelcomeCard();
+    saveH('assistant', 'Bem-vindo à FarmaVida!');
+  } else {
+    hist.forEach(m => m.role === 'user' ? addUser(m.content) : addBot(m.content));
+  }
+
+  keepAlive();
+}
+
+init();
+</script>
+</body>
+</html>
